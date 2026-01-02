@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>生日快乐！</title>
+    <script src="https://unpkg.com/typed.js@2.1.0/dist/typed.umd.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    
+    <style>
+        body, html { margin: 0; height: 100%; overflow: hidden; color: white; }
+        
+        .bg-gif {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: url('https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExNHJndzR5bmI2ZzR6ZzR6ZzR6ZzR6ZzR6ZzR6ZzR6ZzR6ZzR6ZzR6JmVwPXYxX2ludGVybmFsX2dpZl9ieV9pZCZjdD1n/66XpAsuN2I3Yk/giphy.gif') center/cover no-repeat;
+            z-index: -1;
+            filter: brightness(0.7); /* 让背景稍微暗一点，文字更清晰 */
+        }
+
+        .container {
+            height: 100vh; display: flex; flex-direction: column;
+            justify-content: center; align-items: center; text-align: center;
+        }
+
+        h1 { font-size: 3rem; margin-bottom: 20px; text-shadow: 2px 2px 8px rgba(0,0,0,0.5); }
+        
+        /* 打字机文字样式 */
+        #typed-strings { display: none; }
+        .typed-cursor { font-size: 2rem; }
+        .message-box { font-size: 1.8rem; min-height: 100px; padding: 0 20px; }
+    </style>
+</head>
+<body>
+    <div class="bg-gif"></div>
+
+    <audio id="bgm" loop>
+        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+    </audio>
+
+    <div class="container">
+        <h1 id="name-title">Happy Birthday!</h1>
+        <div class="message-box">
+            <span id="typed"></span>
+        </div>
+    </div>
+
+    <script>
+        // 1. 获取名字并设置标题
+        const params = new URLSearchParams(window.location.search);
+        const name = params.get('name') || '你';
+        document.getElementById('name-title').innerText = `Happy Birthday, ${name}! 🎂`;
+
+        // 2. 页面加载后执行动画和音乐
+        window.onload = () => {
+            // 播放音乐
+            const music = document.getElementById('bgm');
+            music.play().catch(() => console.log("等待交互播放"));
+
+            // 喷洒纸屑
+            confetti({
+                particleCount: 150,
+                spread: 70,
+                origin: { y: 0.6 }
+            });
+
+            // 3. 打字机文字动画设置
+            new Typed('#typed', {
+                strings: [
+                    'Sissi姐姐，生日快乐！ ^1000',
+                    '非常羡慕你已经成年了，（主要是能学车了',
+                    '愿祂赐你坚强的信心与充足的智慧。✨ ^500',
+                    '愿你的智慧、身量并神和人喜爱你的心一起增长，❤️',
+                    '在未来无数个18岁中，祝你平安喜乐，福杯满溢。 🍻'
+                ],
+                typeSpeed: 80, // 打字速度
+                backSpeed: 30, // 退格速度
+                backDelay: 2000, // 停顿时间
+                loop: true // 是否循环
+            });
+        };
+    </script>
+</body>
+</html>
