@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>生日惊喜</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body { margin: 0; height: 100vh; display: flex; justify-content: center; align-items: center; background: #fdf2f2; font-family: 'PingFang SC', sans-serif; }
+        .card { text-align: center; padding: 40px; background: white; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
+        button { 
+            background: #ff4757; color: white; border: none; padding: 15px 35px; 
+            font-size: 1.2rem; border-radius: 50px; cursor: pointer; transition: 0.3s;
+        }
+        button:hover { transform: translateY(-5px); box-shadow: 0 5px 15px rgba(255,71,87,0.4); }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h2>💌 您有一封待拆封的信件</h2>
+        <p>点击下方拆封</p>
+        <button onclick="startSurprise()">开启惊喜</button>
+    </div>
+
+    <script>
+        function startSurprise() {
+            
+            const urlParams = new URLSearchParams(window.location.search);
+            const name = urlParams.get('name') || '宝贝';
+            window.location.href = `wish.html?name=${encodeURIComponent(name)}`;
+        }
+    </script>
+</body>
+</html>
