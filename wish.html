@@ -9,13 +9,22 @@
     
     <style>
         body, html { margin: 0; height: 100%; overflow: hidden; color: white; }
-        
+
         .bg-gif {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: url('my-bg.gif') center/cover no-repeat;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
             z-index: -1;
-            filter: brightness(0.7); /* 让背景稍微暗一点，文字更清晰 */
+            background-position: center;
+            background-size: cover;
+            background-repeat: no-repeat;
+            transition: opacity 1s ease-in-out; 
         }
+    /* 分别设置两张图的路径 */
+        #bg1 { background-image: url('my-bg.gif'); }
+        #bg2 { background-image: url('my-bg2.gif'); }
 
         .container {
             height: 100vh; display: flex; flex-direction: column;
@@ -31,7 +40,9 @@
     </style>
 </head>
 <body>
-    <div class="bg-gif"></div>
+    <div id="bg1" class="bg-gif"></div>
+
+    <div id="bg2" class="bg-gif" style="display: none;"></div>
 
     <audio id="bgm" loop>
         <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
@@ -52,17 +63,26 @@
 
         // 2. 页面加载后执行动画和音乐
         window.onload = () => {
-            // 播放音乐
-            const music = document.getElementById('bgm');
-            music.play().catch(() => console.log("等待交互播放"));
+        // 1. 播放音乐和喷洒纸屑
+        const music = document.getElementById('bgm');
+        music.play();
+        confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
 
-            // 喷洒纸屑
-            confetti({
-                particleCount: 150,
-                spread: 70,
-                origin: { y: 0.6 }
-            });
+        // 2. 背景切换逻辑
+        const timeToSwitch = 5000; // 这里设置切换时间，5000 毫秒 = 5 秒
+        
+        setTimeout(() => {
+            const bg1 = document.getElementById('bg1');
+            const bg2 = document.getElementById('bg2');
 
+            // 显示第二个背景并隐藏第一个
+            bg2.style.display = 'block';
+            bg1.style.opacity = '0'; 
+            
+            // 可选：5秒后再喷一次纸屑增强气氛
+            //confetti({ particleCount: 100, spread: 100 });
+        //}, timeToSwitch);
+            
             // 3. 打字机文字动画设置
             new Typed('#typed', {
                 strings: [
