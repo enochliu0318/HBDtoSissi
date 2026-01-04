@@ -8,41 +8,37 @@
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     
     <style>
-        body, html { margin: 0; height: 100%; overflow: hidden; color: white; }
+        body, html { margin: 0; height: 100%; overflow: hidden; color: white; background-color: #000; }
 
         .bg-gif {
             position: fixed;
             top: 0;
             left: 0;
-            width: 100%;
-            height: 100%;
+            width: 100vw;
+            height: 100vh;
             z-index: -1;
             background-position: center;
             background-size: cover;
             background-repeat: no-repeat;
-            transition: opacity 1s ease-in-out; 
+            transition: opacity 1.5s ease-in-out; 
         }
-    /* 分别设置两张图的路径 */
-        #bg1 { background-image: url('my-bg.gif'); }
-        #bg2 { background-image: url('my-bg2.gif'); }
+        /* 确保路径完全对应你的文件名 */
+        #bg1 { background-image: url('my-bg.gif'); opacity: 1; }
+        #bg2 { background-image: url('my-bg2.gif'); opacity: 0; display: none; }
 
         .container {
             height: 100vh; display: flex; flex-direction: column;
             justify-content: center; align-items: center; text-align: center;
+            background: rgba(0, 0, 0, 0.2); /* 稍微遮罩，防止GIF太亮看不清字 */
         }
 
-        h1 { font-size: 3rem; margin-bottom: 20px; text-shadow: 2px 2px 8px rgba(0,0,0,0.5); }
-        
-        /* 打字机文字样式 */
-        #typed-strings { display: none; }
-        .typed-cursor { font-size: 2rem; }
-        .message-box { font-size: 1.8rem; min-height: 100px; padding: 0 20px; }
+        h1 { font-size: 3rem; margin-bottom: 20px; text-shadow: 2px 2px 8px rgba(0,0,0,0.8); }
+        .message-box { font-size: 1.8rem; min-height: 100px; padding: 0 20px; text-shadow: 1px 1px 5px rgba(0,0,0,0.8); }
     </style>
 </head>
 <body>
     <div id="bg1" class="bg-gif"></div>
-
-    <div id="bg2" class="bg-gif" style="display: none;"></div>
+    <div id="bg2" class="bg-gif"></div>
 
     <audio id="bgm" loop>
         <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
@@ -56,46 +52,43 @@
     </div>
 
     <script>
-        // 1. 获取名字并设置标题
+        // 1. 获取名字
         const params = new URLSearchParams(window.location.search);
-        const name = params.get('name') || '你';
+        const name = params.get('name') || 'Sissi姐姐';
         document.getElementById('name-title').innerText = `Happy Birthday, ${name}! 🎂`;
 
-        // 2. 页面加载后执行动画和音乐
         window.onload = () => {
-        // 1. 播放音乐和喷洒纸屑
-        const music = document.getElementById('bgm');
-        music.play();
-        confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
+            // 2. 音乐播放
+            const music = document.getElementById('bgm');
+            music.play().catch(e => console.log("音频播放被拦截，需通过index.html跳转"));
 
-        // 2. 背景切换逻辑
-        const timeToSwitch = 5000; // 这里设置切换时间，5000 毫秒 = 5 秒
-        
-        setTimeout(() => {
-            const bg1 = document.getElementById('bg1');
-            const bg2 = document.getElementById('bg2');
+            // 3. 初始喷纸屑
+            confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
 
-            // 显示第二个背景并隐藏第一个
-            bg2.style.display = 'block';
-            bg1.style.opacity = '0'; 
-            
-            // 可选：5秒后再喷一次纸屑增强气氛
-            //confetti({ particleCount: 100, spread: 100 });
-        }, timeToSwitch);
-            
-            // 3. 打字机文字动画设置
+            // 4. 背景切换逻辑 (5秒后切换)
+            setTimeout(() => {
+                const bg1 = document.getElementById('bg1');
+                const bg2 = document.getElementById('bg2');
+                bg2.style.display = 'block';
+                setTimeout(() => {
+                    bg1.style.opacity = '0';
+                    bg2.style.opacity = '1';
+                }, 50);
+            }, 5000);
+
+            // 5. 打字机动画
             new Typed('#typed', {
                 strings: [
                     'Sissi姐姐，生日快乐！ ^1000',
-                    '非常羡慕你已经成年了，（主要是能学车了',
+                    '非常羡慕你已经成年了，（主要是能学车了）',
                     '愿祂赐你坚强的信心与充足的智慧。✨ ^500',
                     '愿你的智慧、身量并神和人喜爱你的心一起增长，❤️',
-                    '在未来无数个18岁中，祝你平安喜乐，福杯满溢。 🍻'
+                    '祝你平安喜乐，福杯满溢。 🍻'
                 ],
-                typeSpeed: 80, // 打字速度
-                backSpeed: 30, // 退格速度
-                backDelay: 2000, // 停顿时间
-                loop: true // 是否循环
+                typeSpeed: 80,
+                backSpeed: 30,
+                backDelay: 2000,
+                loop: true
             });
         };
     </script>
