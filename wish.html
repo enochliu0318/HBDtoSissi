@@ -8,14 +8,7 @@
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     
     <style>
-        /* 1. 修复：背景设为透明，防止黑色挡住后面的 GIF */
-        body, html { 
-            margin: 0; 
-            height: 100%; 
-            overflow: hidden; 
-            color: white; 
-            background-color: transparent; 
-        }
+        body, html { margin: 0; height: 100%; overflow: hidden; color: white; background-color: #000; }
 
         .bg-gif {
             position: fixed;
@@ -23,27 +16,20 @@
             left: 0;
             width: 100vw;
             height: 100vh;
-            /* 2. 修复：层级设为 -1，但也确保父元素没有颜色遮挡 */
-            z-index: -1; 
+            z-index: -1;
             background-position: center;
             background-size: cover;
             background-repeat: no-repeat;
+            /* 删除了 transition，现在切换是瞬间完成的 */
         }
 
-        /* 3. 终极修复：使用 CDN 链接，绝对能读取到图片 */
-        #bg1 { 
-            background-image: url('https://cdn.jsdelivr.net/gh/enochliu0318/HBDtoSissi@main/my-bg.gif'); 
-            opacity: 1; 
-        }
-        #bg2 { 
-            background-image: url('https://cdn.jsdelivr.net/gh/enochliu0318/HBDtoSissi@main/my-bg2.gif'); 
-            opacity: 0; 
-        }
+        /* 初始状态设置 */
+        #bg1 { background-image: url('my-bg.gif'); display: block; }
+        #bg2 { background-image: url('my-bg2.gif'); display: none; }
 
         .container {
             height: 100vh; display: flex; flex-direction: column;
             justify-content: center; align-items: center; text-align: center;
-            /* 半透明遮罩，只在文字下面显示 */
             background: rgba(0, 0, 0, 0.3); 
         }
 
@@ -72,25 +58,27 @@
         document.getElementById('name-title').innerText = `Happy Birthday, ${name}! 🎂`;
 
         window.onload = () => {
-            confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
             const music = document.getElementById('bgm');
-            music.play().catch(() => console.log("需要点击进入才能播放"));
+            music.play().catch(e => console.log("等待交互"));
 
-            // 5秒后切换背景
+            // 只有开头这一个烟花
+            confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
+
+            // 背景切换逻辑
             setTimeout(() => {
                 const b1 = document.getElementById('bg1');
                 const b2 = document.getElementById('bg2');
                 if(b1 && b2) {
-                    b1.style.opacity = '0';
-                    b2.style.opacity = '1';
-                    confetti({ particleCount: 100, spread: 160 });
+                    b1.style.display = 'none'; // 瞬间隐藏第一个
+                    b2.style.display = 'block'; // 瞬间显示第二个
+                    // 删除了这里的第二个 confetti 烟花代码
                 }
-            }, 2180);
+            }, 5000);
 
             new Typed('#typed', {
                 strings: [
                     'Sissi姐姐，生日快乐！ ^1000',
-                    '非常羡慕你已经成年了，（而且能开车）',
+                    '非常羡慕你已经成年，（主要是羡慕你能准备学车了',
                     '愿祂赐你坚强的信心与充足的智慧。✨ ^500',
                     '愿你的智慧、身量并神和人喜爱你的心一起增长，❤️',
                     '祝你平安喜乐，福杯满溢。 🍻'
