@@ -16,16 +16,22 @@
             left: 0;
             width: 100vw;
             height: 100vh;
-            z-index: -1;
+            z-index: -1; /* 确保它在文字下面 */
             background-position: center;
             background-size: cover;
             background-repeat: no-repeat;
-            transition: opacity 1.5s ease-in-out; 
+            transition: opacity 1.5s ease; /* 切换时的淡入淡出效果 */
         }
 
-        /* 初始状态：第一个显示，第二个隐藏 */
-        #bg1 { background-image: url('my-bg.gif'); opacity: 1; }
-        #bg2 { background-image: url('my-bg2.gif'); opacity: 0; }
+    /* 关键：确保第一个默认显示，第二个默认完全透明 */
+        #bg1 { 
+            background-image: url('my-bg.gif'); 
+            opacity: 1; 
+        }
+        #bg2 { 
+            background-image: url('my-bg2.gif'); 
+            opacity: 0; 
+        }
 
         .container {
             height: 100vh; display: flex; flex-direction: column;
@@ -53,56 +59,46 @@
     </div>
 
     <script>
-        // 1. 获取名字并设置标题
-        const params = new URLSearchParams(window.location.search);
-        const name = params.get('name') || 'Sissi姐姐';
-        document.getElementById('name-title').innerText = `Happy Birthday, ${name}! 🎂`;
+    // 获取名字
+    const params = new URLSearchParams(window.location.search);
+    const name = params.get('name') || 'Sissi姐姐';
+    document.getElementById('name-title').innerText = `Happy Birthday, ${name}! 🎂`;
 
-        window.onload = () => {
-            // 2. 播放音乐
-            const music = document.getElementById('bgm');
-            music.play().catch(e => console.log("请通过index.html点击进入以播放音乐"));
+    window.onload = () => {
+        // 1. 尝试播放音乐
+        const music = document.getElementById('bgm');
+        music.play().catch(e => console.log("等待用户交互"));
 
-            // 3. 初始烟花/纸屑
-            confetti({
-                particleCount: 150,
-                spread: 70,
-                origin: { y: 0.6 }
-            });
+        // 2. 初始喷纸屑
+        confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
 
-            // 4. 背景切换逻辑 (5秒后执行)
-            setTimeout(() => {
-                const bg1 = document.getElementById('bg1');
-                const bg2 = document.getElementById('bg2');
-                
-                // 执行渐变切换
-                bg1.style.opacity = '0';
-                bg2.style.opacity = '1';
-                
-                // 切换时再喷一次烟花
-                confetti({
-                    particleCount: 100,
-                    velocity: 30,
-                    spread: 360,
-                    origin: { y: 0.5 }
-                });
-            }, 5000);
+        // 3. 延迟 5 秒后切换背景
+        setTimeout(() => {
+            const b1 = document.getElementById('bg1');
+            const b2 = document.getElementById('bg2');
+            if(b1 && b2) {
+                b1.style.opacity = '0'; // 第一个变透明
+                b2.style.opacity = '1'; // 第二个显现
+                // 切换时额外奖励一个烟花
+                confetti({ particleCount: 100, spread: 160 });
+            }
+        }, 5000);
 
-            // 5. 打字机文字动画
-            new Typed('#typed', {
-                strings: [
-                    'Sissi姐姐，生日快乐！ ^1000',
-                    '非常羡慕你已经成年了，（主要是能学车了）',
-                    '愿祂赐你坚强的信心与充足的智慧。✨ ^500',
-                    '愿你的智慧、身量并神和人喜爱你的心一起增长，❤️',
-                    '祝你平安喜乐，福杯满溢。 🍻'
-                ],
-                typeSpeed: 80,
-                backSpeed: 30,
-                backDelay: 2000,
-                loop: true
-            });
-        };
-    </script>
+        // 4. 启动打字机 (确保这一步在最后，即使出错也不影响背景)
+        new Typed('#typed', {
+            strings: [
+                'Sissi姐姐，生日快乐！ ^1000',
+                '非常羡慕你已经成年了，（主要是能学车了）',
+                '愿祂赐你坚强的信心与充足的智慧。✨ ^500',
+                '愿你的智慧、身量并神和人喜爱你的心一起增长，❤️',
+                '祝你平安喜乐，福杯满溢。 🍻'
+            ],
+            typeSpeed: 80,
+            backSpeed: 30,
+            backDelay: 2000,
+            loop: true
+        });
+    };
+</script>
 </body>
 </html>
