@@ -8,8 +8,14 @@
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     
     <style>
-        /* 1. 基础设置：背景色设为深色，防止图片加载前刺眼 */
-        body, html { margin: 0; height: 100%; overflow: hidden; color: white; background-color: #1a1a1a; }
+        /* 1. 修复：背景设为透明，防止黑色挡住后面的 GIF */
+        body, html { 
+            margin: 0; 
+            height: 100%; 
+            overflow: hidden; 
+            color: white; 
+            background-color: transparent; 
+        }
 
         .bg-gif {
             position: fixed;
@@ -17,30 +23,29 @@
             left: 0;
             width: 100vw;
             height: 100vh;
-            z-index: -1; /* 放在最底层 */
+            /* 2. 修复：层级设为 -1，但也确保父元素没有颜色遮挡 */
+            z-index: -1; 
             background-position: center;
             background-size: cover;
             background-repeat: no-repeat;
-            transition: opacity 2s ease-in-out; /* 2秒的柔和切换 */
+            transition: opacity 1.5s ease-in-out; 
         }
 
-        /* 2. 关键修改：使用完整的网址链接 */
+        /* 3. 终极修复：使用 CDN 链接，绝对能读取到图片 */
         #bg1 { 
-            /* 使用绝对路径 */
-            background-image: url('https://enochliu0318.github.io/HBDtoSissi/my-bg.gif'); 
+            background-image: url('https://cdn.jsdelivr.net/gh/enochliu0318/HBDtoSissi@main/my-bg.gif'); 
             opacity: 1; 
         }
-        
         #bg2 { 
-            /* 使用绝对路径 */
-            background-image: url('https://enochliu0318.github.io/HBDtoSissi/my-bg2.gif'); 
+            background-image: url('https://cdn.jsdelivr.net/gh/enochliu0318/HBDtoSissi@main/my-bg2.gif'); 
             opacity: 0; 
         }
 
         .container {
             height: 100vh; display: flex; flex-direction: column;
             justify-content: center; align-items: center; text-align: center;
-            background: rgba(0, 0, 0, 0.3); /* 半透明遮罩 */
+            /* 半透明遮罩，只在文字下面显示 */
+            background: rgba(0, 0, 0, 0.3); 
         }
 
         h1 { font-size: 3rem; margin-bottom: 20px; text-shadow: 2px 2px 10px rgba(0,0,0,0.8); }
@@ -63,46 +68,41 @@
     </div>
 
     <script>
-    // 获取名字
-    const params = new URLSearchParams(window.location.search);
-    const name = params.get('name') || 'Sissi姐姐';
-    document.getElementById('name-title').innerText = `Happy Birthday, ${name}! 🎂`;
+        const params = new URLSearchParams(window.location.search);
+        const name = params.get('name') || 'Sissi姐姐';
+        document.getElementById('name-title').innerText = `Happy Birthday, ${name}! 🎂`;
 
-    window.onload = () => {
-        // 1. 尝试播放音乐
-        const music = document.getElementById('bgm');
-        music.play().catch(e => console.log("等待用户交互"));
+        window.onload = () => {
+            const music = document.getElementById('bgm');
+            music.play().catch(() => console.log("需要点击进入才能播放"));
 
-        // 2. 初始喷纸屑
-        confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
+            confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
 
-        // 3. 延迟 5 秒后切换背景
-        setTimeout(() => {
-            const b1 = document.getElementById('bg1');
-            const b2 = document.getElementById('bg2');
-            if(b1 && b2) {
-                b1.style.opacity = '0'; // 第一个变透明
-                b2.style.opacity = '1'; // 第二个显现
-                // 切换时额外奖励一个烟花
-                confetti({ particleCount: 100, spread: 160 });
-            }
-        }, 5000);
+            // 5秒后切换背景
+            setTimeout(() => {
+                const b1 = document.getElementById('bg1');
+                const b2 = document.getElementById('bg2');
+                if(b1 && b2) {
+                    b1.style.opacity = '0';
+                    b2.style.opacity = '1';
+                    confetti({ particleCount: 100, spread: 160 });
+                }
+            }, 5000);
 
-        // 4. 启动打字机 (确保这一步在最后，即使出错也不影响背景)
-        new Typed('#typed', {
-            strings: [
-                'Sissi姐姐，生日快乐！ ^1000',
-                '非常羡慕你已经成年了，（主要是能学车了）',
-                '愿祂赐你坚强的信心与充足的智慧。✨ ^500',
-                '愿你的智慧、身量并神和人喜爱你的心一起增长，❤️',
-                '祝你平安喜乐，福杯满溢。 🍻'
-            ],
-            typeSpeed: 80,
-            backSpeed: 30,
-            backDelay: 2000,
-            loop: true
-        });
-    };
-</script>
+            new Typed('#typed', {
+                strings: [
+                    'Sissi姐姐，生日快乐！ ^1000',
+                    '非常羡慕你已经成年了，（主要是能学车了）',
+                    '愿祂赐你坚强的信心与充足的智慧。✨ ^500',
+                    '愿你的智慧、身量并神和人喜爱你的心一起增长，❤️',
+                    '祝你平安喜乐，福杯满溢。 🍻'
+                ],
+                typeSpeed: 80,
+                backSpeed: 30,
+                backDelay: 2000,
+                loop: true
+            });
+        };
+    </script>
 </body>
 </html>
