@@ -28,7 +28,6 @@
             background-position: center;
             background-size: cover;
             background-repeat: no-repeat;
-            transition: opacity 1.5s ease-in-out; 
         }
 
         /* 3. 终极修复：使用 CDN 链接，绝对能读取到图片 */
@@ -73,10 +72,9 @@
         document.getElementById('name-title').innerText = `Happy Birthday, ${name}! 🎂`;
 
         window.onload = () => {
+            confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
             const music = document.getElementById('bgm');
             music.play().catch(() => console.log("需要点击进入才能播放"));
-
-            confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
 
             // 5秒后切换背景
             setTimeout(() => {
@@ -87,7 +85,7 @@
                     b2.style.opacity = '1';
                     confetti({ particleCount: 100, spread: 160 });
                 }
-            }, 5000);
+            }, 2180);
 
             new Typed('#typed', {
                 strings: [
