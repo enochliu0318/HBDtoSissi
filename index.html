@@ -11,14 +11,12 @@
             display: flex; 
             justify-content: center; 
             align-items: center; 
-            /* 修改 1：背景改为更有层次感的粉紫色渐变，让白色雪花更明显 */
             background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 50%, #feada6 100%);
             font-family: 'PingFang SC', sans-serif; 
             overflow: hidden; 
             position: relative;
         }
 
-        /* 增加一个半透明的蒙版，让背景看起来更深邃一点 */
         body::before {
             content: '';
             position: absolute;
@@ -34,7 +32,7 @@
             border-radius: 20px; 
             box-shadow: 0 10px 30px rgba(0,0,0,0.15); 
             z-index: 10; 
-            backdrop-filter: blur(5px); /* 背景模糊效果，更高级 */
+            backdrop-filter: blur(5px);
         }
 
         button { 
@@ -47,12 +45,12 @@
         .snowflake {
             position: fixed;
             top: -10px;
-            /* 修改 2：雪花颜色固定为纯白色 */
+
             color: #ffffff;
             user-select: none;
             z-index: 1; 
             pointer-events: none;
-            /* 增强雪花的发光感 */
+
             text-shadow: 0 0 8px rgba(255, 255, 255, 0.8);
         }
 
@@ -80,20 +78,19 @@
             const snowflake = document.createElement('div');
             snowflake.classList.add('snowflake');
             
-            // 雪花形状
+
             const shapes = ['❄', '❅', '❆', '•'];
             snowflake.innerHTML = shapes[Math.floor(Math.random() * shapes.length)];
             
-            // 随机大小和位置
+
             const size = Math.random() * 1.5 + 0.8 + 'rem';
             snowflake.style.fontSize = size;
             snowflake.style.left = Math.random() * 100 + 'vw';
             
-            // 随机动画时长
+
             const duration = Math.random() * 5 + 6 + 's';
             snowflake.style.animation = `fall ${duration} linear forwards`;
             
-            // 透明度稍微调高一点，增加对比度
             snowflake.style.opacity = Math.random() * 0.5 + 0.5;
 
             document.body.appendChild(snowflake);
